@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "@nestjs-modules/ioredis": "^2.0.2",
+    "@nestjs/config": "^4.0.2",
+    "@nestjs/microservices": "^11.1.0",
+    "@nestjs/typeorm": "^11.0.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "ioredis": "^5.6.1",
+    "kafkajs": "^2.2.4",
+    "pg": "^8.15.6",
+    "typeorm": "^0.3.22"
+  }
+}
