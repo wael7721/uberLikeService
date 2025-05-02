@@ -49,7 +49,7 @@ created_at TIMESTAMP DEFAULT NOW()
 
 CREATE TABLE IF NOT EXISTS rating(
 id SERIAL PRIMARY KEY,
-from_user_id INTEGER REFERENCES users(id )NOT NULL,
+from_user_id INTEGER REFERENCES users(id) NOT NULL,
 to_user_id INTEGER REFERENCES users(id) NOT NULL,
 trip_id INTEGER REFERENCES trips(id) NOT NULL,
 rating INTEGER CHECK (rating>=1 AND rating<=5),
