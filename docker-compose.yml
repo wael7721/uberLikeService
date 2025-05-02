@@ -1,0 +1,50 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: taxi_postgres
+    restart: always
+    env_file:
+      - db.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - internal_net
+
+  backend:
+    build: 
+      context: ./backend
+    container_name: taxi_backend
+    restart: always
+    env_file: .env
+    depends_on:
+      - postgres
+    ports:
+      -"3000:3000"
+    networks:
+      - frontend_net
+      - internal_net
+
+  frontend:
+    build: 
+      context: ./frontend
+    container_name: taxi_frontend
+    restart: always
+    env_file:
+      - .env
+    expose:
+      - "5173:5173"
+    depends_on:
+      - backend
+    networks:
+      - frontend_net
+
+
+volumes:
+  postgres_data:
+
+networks:
+  internal_net:
+    internal: true
+  frontend_net:
+    
