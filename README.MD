@@ -16,22 +16,6 @@ This is a backend-first project designed to simulate a simplified Uber-like ride
 
 ---
 
-## 🔧 Project Structure
-
-\`\`\`
-src/
-├── auth/             # JWT Auth, Role-based access (Driver/Rider)
-├── users/            # User management
-├── rides/            # Ride request, status updates
-├── location/         # Location updates using Redis
-├── kafka/            # Kafka producer/consumer setup
-├── notifications/    # Optional WebSocket alerts
-├── common/           # DTOs, guards, pipes
-└── main.ts           # App entry point
-\`\`\`
-
----
-
 ## 🚀 Features
 
 - Rider/Driver authentication with JWT
