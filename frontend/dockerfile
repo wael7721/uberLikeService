@@ -1,0 +1,21 @@
+# backend/Dockerfile
+
+# 1. Use Node base image
+FROM node:20-slim
+
+# 2. Set working directory inside container
+WORKDIR /app
+
+# 3. Copy package files and install dependencies
+COPY package*.json ./
+
+RUN npm install
+
+# 4. Copy the rest of your source code and env file
+
+COPY .env .env
+
+COPY . .
+
+# 5. Start the app (adjust if using dev mode)
+CMD ["npm", "run", "start"]

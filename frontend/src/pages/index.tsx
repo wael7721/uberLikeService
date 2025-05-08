@@ -1,7 +1,5 @@
-import "@/styles/globals.css";
-
-export default function Home() {
-  return (
-    
-  );
+import Image from "next/image";
+import NavBar from "@/components/NavBar";
+export default function (){
+  return <NavBar/>
 }
