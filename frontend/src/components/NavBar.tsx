@@ -2,7 +2,7 @@ export default function NavBar(){
     return (
         <header className="flex flex-row items-center h-16 w-[100%] shadow-sm bg-black">
             <a href="/" className="ml-32 pb-2">
-            <img src={'taxiLogoWhite.png'} className="w-32 h-24 cursor-pointer"></img>
+            <img src={'taxiLogoWhite.png'} className="w-[160px] h-24 cursor-pointer"></img>
             </a>
             <div className="flex pt-1 gap-8 text-nowrap text-white text-center">
                 <a className="pl-3 pr-3 ml-8 hover:bg-gray-900 transition-all rounded-full" href="/Ride">Ride</a>
