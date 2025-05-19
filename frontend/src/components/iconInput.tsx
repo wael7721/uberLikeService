@@ -89,7 +89,7 @@ export default function IconInput({
           onChange={handleChange}
           onClick={handleClick}
           ref={inputRef}
-          className="w-full bg-transparent text-sm text-gray-900 focus:outline-none"
+          className="w-full bg-transparent text-sm text-gray-900 focus:outline-none focus:shadow-none focus:ring-0"
         />
 
         {/* Success check icon */}

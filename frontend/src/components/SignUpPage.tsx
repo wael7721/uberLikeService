@@ -1,7 +1,7 @@
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { toast } from "react-toastify";
-import { Mail, Lock, Calendar, User, Car } from "lucide-react";
+import { Mail, Lock, Calendar, User, Car, Phone } from "lucide-react";
 import IconInput from "./iconInput";
 
 type UserType = "passenger" | "taxi";
@@ -10,6 +10,7 @@ type FormValues = {
   name: string;
   email: string;
   password: string;
+  phoneNumber: string;
   dob: string;
   userType: "" | UserType;
 };
@@ -19,6 +20,7 @@ export default function SignUpPage() {
     initialValues: {
       name: "",
       email: "",
+      phoneNumber: "",
       password: "",
       dob: "",
       userType: "",
@@ -31,6 +33,9 @@ export default function SignUpPage() {
         .min(8, "Required minimum 8 characters")
         .matches(/[a-zA-Z]/, "Password can only contain Latin letters.")
         .required("Required"),
+      phoneNumber: Yup.string()
+        .required("Phone Number required")
+        .matches(/^\d{8}$/,"Phone number must be exactly 8 digits"),
       dob: Yup.date()
         .max(new Date(), "Date of birth must be in the past")
         .required("Date of birth is required"),
@@ -119,6 +124,17 @@ export default function SignUpPage() {
         error={formik.touched.dob && formik.errors.dob ? formik.errors.dob : ""}
         touched={formik.touched.dob}
       />
+      {/* Phone Number */}
+      <IconInput
+        id="phone"
+        label="Phone Number"
+        icon={<Phone className="w-5 h-5 text-yellow-600" />}
+        fieldProps={formik.getFieldProps("phoneNumber")}
+        error={
+          formik.touched.phoneNumber && formik.errors.phoneNumber ? formik.errors.phoneNumber : ""
+        }
+        touched={formik.touched.phoneNumber}
+      />
 
       {/* User Type */}
       <div className="relative mt-4">
@@ -130,7 +146,9 @@ export default function SignUpPage() {
           {/* Sliding background */}
           <div
             className={`absolute top-0 left-0 w-1/2 h-full bg-yellow-600 rounded-full transition-transform duration-300 ease-in-out z-0 ${
-              formik.values.userType === ""?"opacity-0":formik.values.userType==="taxi"
+              formik.values.userType === ""
+                ? "opacity-0"
+                : formik.values.userType === "taxi"
                 ? "translate-x-full"
                 : "translate-x-0"
             }`}
