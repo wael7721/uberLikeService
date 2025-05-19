@@ -4,6 +4,8 @@ CREATE TABLE IF NOT EXISTS users(
   id SERIAL PRIMARY KEY,
   name VARCHAR(100),
   email VARCHAR(100) UNIQUE NOT NULL,
+  phone_number VARCHAR(15) NOT NULL
+  dob DATE NOT NULL,
   password Text NOT NULL,
   user_role ROLE NOT NULL,
   created_at TIMESTAMP DEFAULT NOW()
