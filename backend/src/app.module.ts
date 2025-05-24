@@ -3,8 +3,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UsersModule } from './users/users.module';
+import { AuthService } from './auth/auth.service';
+import { AuthModule } from './auth/auth.module';
 @Module({
-  imports: [
+  imports: [UsersModule,
     ConfigModule.forRoot({
       envFilePath: ['.env'],
       isGlobal: true, // makes config available app-wide
@@ -17,15 +20,17 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         username: configService.get<string>('POSTGRES_USER'),
         password: configService.get<string>('POSTGRES_PASSWORD'),
         port: 5432,
-        entities: [],
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
         database: configService.get<string>('POSTGRES_DB'),
         synchronize: true,
         logging: true,
       }),
       inject: [ConfigService]
     }),
+    UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AuthService],
 })
 export class AppModule {}

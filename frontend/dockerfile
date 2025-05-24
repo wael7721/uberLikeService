@@ -12,8 +12,8 @@ COPY package*.json ./
 RUN npm install
 
 # 4. Copy the rest of your source code
-
 COPY . .
 
+COPY .env.local .env.local
 # 5. Start the app (adjust if using dev mode)
 CMD ["npm", "run", "dev"]
