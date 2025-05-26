@@ -20,6 +20,7 @@ export class UsersService {
 
   async createUser(dto: CreateUserDto): Promise<User> {
     const existing = await this.usersRepository.findOne({ where: [{ email: dto.email },{phone_number: dto.phone_number}] });
+    
     if (existing) {
       if(existing.email===dto.email){
         throw new BadRequestException('Email already registered');}
@@ -27,7 +28,7 @@ export class UsersService {
         throw new BadRequestException('Phone number already registered');
       }
     }
-
+    
     // Validate DOB (basic: must be in the past)
     const dob = new Date(dto.dob);
     if (dob >= new Date()) {

@@ -1,34 +1,26 @@
-import { IsEmail, IsNotEmpty, MinLength, IsDateString, Length } from 'class-validator';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { IsEmail, IsNotEmpty, MinLength, IsDateString,Length, Matches, IsIn} from 'class-validator';
 
 export class CreateUserDto {
-    
-  @PrimaryGeneratedColumn()
-  id:number;
 
   @IsNotEmpty()
   name: string;
 
   @IsEmail()
-  @Column({ unique: true })
   email: string;
 
   @IsNotEmpty()
-  @Column({ unique: true }) 
-  @Length(8,8,{message:"Phone Number must be 8 digits"})
+  @Length(8, 8, { message: 'Phone number must be exactly 8 digits' })
+  @Matches(/^\d+$/, { message: 'Phone number must contain only digits' })
   phone_number: string;
 
   @IsDateString()
   dob: string;
 
   @MinLength(6)
-  @Column()
   password: string;
 
   @IsNotEmpty()
-  @Column()
+  @IsIn(['passenger', 'taxi'], { message: 'user_role must be either passenger or taxi' })
   user_role: 'passenger' | 'taxi';
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  created_at?: Date;
 }

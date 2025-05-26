@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
 
-export type UserRole = 'passenger' | 'taxi' | 'admin';
+export type UserRole = 'passenger' | 'taxi';
 
 @Entity()
 export class User {
@@ -13,7 +13,7 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ unique: true })
   phone_number: string;
 
   @Column({ type: 'date' })
@@ -23,7 +23,7 @@ export class User {
   password: string;
 
   @Column({ type: 'varchar' })
-  user_role: UserRole;
+  user_role: 'passenger' | 'taxi' | 'admin';
 
   @CreateDateColumn()
   created_at: Date;
