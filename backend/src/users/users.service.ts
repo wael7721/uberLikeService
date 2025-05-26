@@ -1,43 +1,40 @@
-import { Injectable,BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-
-// interface CreateUserResult {
-//   success: boolean;
-//   user?: User;
-//   error?: string;
-// }
+import { LoginUserDto } from './dto/login-user.dto';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    @InjectRepository(User) private usersRepository: Repository<User>,
+    private authService: AuthService, // Inject AuthService
   ) {}
 
-  async createUser(dto: CreateUserDto): Promise<User> {
-    const existing = await this.usersRepository.findOne({ where: [{ email: dto.email },{phone_number: dto.phone_number}] });
-    
-    if (existing) {
-      if(existing.email===dto.email){
-        throw new BadRequestException('Email already registered');}
-      if(existing.phone_number===dto.phone_number){
-        throw new BadRequestException('Phone number already registered');
-      }
+  async createUser(dto: CreateUserDto): Promise<{token:string}> {
+    const exists = await this.usersRepository.findOne({
+      where: [{ email: dto.email }, { phone_number: dto.phone_number }],
+    });
+    if (exists) {
+      throw new BadRequestException('Email or phone number already registered');
     }
-    
-    // Validate DOB (basic: must be in the past)
+
     const dob = new Date(dto.dob);
     if (dob >= new Date()) {
       throw new BadRequestException('Date of birth must be in the past');
     }
 
-    // Hash password
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(dto.password, salt);
+    const hashedPassword = await bcrypt.hash(
+      dto.password,
+      await bcrypt.genSalt(),
+    );
 
     const user = this.usersRepository.create({
       ...dto,
@@ -45,36 +42,26 @@ export class UsersService {
       password: hashedPassword,
     });
 
-    return this.usersRepository.save(user);
+    const token = this.authService.generateToken(user);
+
+    return { token };
   }
-
-  /*async createUserSafe(dto: CreateUserDto): Promise<CreateUserResult> {
-  try {
-    const exists = await this.usersRepo.findOne({
-      where: [{ email: dto.email }, { phone_number: dto.phone_number }],
-    });
-    if (exists) {
-      return { success: false, error: 'Email or phone number already registered' };
-    }
-
-    const dob = new Date(dto.dob);
-    if (dob >= new Date()) {
-      return { success: false, error: 'Date of birth must be in the past' };
-    }
-
-    const hashedPassword = await bcrypt.hash(dto.password, await bcrypt.genSalt());
-
-    const user = this.usersRepo.create({
-      ...dto,
-      dob,
-      password: hashedPassword,
+  async loginUser(dto: LoginUserDto): Promise<{ token: string }> {
+    const user = await this.usersRepository.findOne({
+      where: [{ email: dto.identifier }, { phone_number: dto.identifier }],
     });
 
-    const savedUser = await this.usersRepo.save(user);
-    return { success: true, user: savedUser };
-  } catch (error) {
-    // Log error if needed
-    return { success: false, error: 'Unexpected error occurred' };
+    if (!user) {
+      throw new UnauthorizedException('User does not exist');
+    }
+
+    const passwordMatch = await bcrypt.compare(dto.password, user.password);
+    if (!passwordMatch) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    const token = this.authService.generateToken(user);
+
+    return { token };
   }
-} */ 
 }

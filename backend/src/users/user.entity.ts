@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeor
 
 export type UserRole = 'passenger' | 'taxi';
 
-@Entity()
+@Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
@@ -23,7 +23,7 @@ export class User {
   password: string;
 
   @Column({ type: 'varchar' })
-  user_role: 'passenger' | 'taxi' | 'admin';
+  user_role: 'passenger' | 'taxi';
 
   @CreateDateColumn()
   created_at: Date;
