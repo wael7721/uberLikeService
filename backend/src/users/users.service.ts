@@ -1,24 +1,20 @@
 import {
   Injectable,
   BadRequestException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
-import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private usersRepository: Repository<User>,
-    private authService: AuthService, // Inject AuthService
   ) {}
 
-  async createUser(dto: CreateUserDto): Promise<{token:string}> {
+  async createUser(dto: CreateUserDto): Promise<User> {
     const exists = await this.usersRepository.findOne({
       where: [{ email: dto.email }, { phone_number: dto.phone_number }],
     });
@@ -42,26 +38,12 @@ export class UsersService {
       password: hashedPassword,
     });
 
-    const token = this.authService.generateToken(user);
-
-    return { token };
+    return this.usersRepository.save(user)
   }
-  async loginUser(dto: LoginUserDto): Promise<{ token: string }> {
-    const user = await this.usersRepository.findOne({
-      where: [{ email: dto.identifier }, { phone_number: dto.identifier }],
+
+  async findByIdentifier(identifier: string): Promise<User | null> {
+    return this.usersRepository.findOne({
+      where: [{ email: identifier }, { phone_number: identifier }],
     });
-
-    if (!user) {
-      throw new UnauthorizedException('User does not exist');
-    }
-
-    const passwordMatch = await bcrypt.compare(dto.password, user.password);
-    if (!passwordMatch) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-
-    const token = this.authService.generateToken(user);
-
-    return { token };
   }
 }

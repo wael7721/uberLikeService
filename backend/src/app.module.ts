@@ -6,8 +6,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
 @Module({
-  imports: [UsersModule,
+  imports: [
     ConfigModule.forRoot({
       envFilePath: ['.env'],
       isGlobal: true, // makes config available app-wide
@@ -31,6 +32,6 @@ import { AuthModule } from './auth/auth.module';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService, AuthService],
+  providers: [AuthService,AppService],
 })
 export class AppModule {}
