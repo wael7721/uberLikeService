@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
@@ -38,12 +35,18 @@ export class UsersService {
       password: hashedPassword,
     });
 
-    return this.usersRepository.save(user)
+    return this.usersRepository.save(user);
   }
 
   async findByIdentifier(identifier: string): Promise<User | null> {
     return this.usersRepository.findOne({
       where: [{ email: identifier }, { phone_number: identifier }],
+    });
+  }
+
+  async findByNumber(identifier: number): Promise<User | null> {
+    return this.usersRepository.findOne({
+      where: [{ id: identifier }],
     });
   }
 }

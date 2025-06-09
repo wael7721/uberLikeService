@@ -4,9 +4,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
-import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
-import { JwtModule } from '@nestjs/jwt';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -20,7 +18,7 @@ import { JwtModule } from '@nestjs/jwt';
         host: configService.get<string>('POSTGRES_HOST'),
         username: configService.get<string>('POSTGRES_USER'),
         password: configService.get<string>('POSTGRES_PASSWORD'),
-        port: 5432,
+        port: configService.get<number>('POSTGRES_PORT'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         database: configService.get<string>('POSTGRES_DB'),
         synchronize: true,
