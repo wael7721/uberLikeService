@@ -5,15 +5,15 @@ import { LoginUserDto } from 'src/users/dto/login-user.dto';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private authService: AuthService) {}
-    @Post('register')
-    @HttpCode(HttpStatus.CREATED)
-    register(@Body() dto: CreateUserDto):Promise<{token:string}> {
-        return this.authService.register(dto);
-    }
-    @Post('login')
-    @HttpCode(HttpStatus.OK)
-    login(@Body() dto:LoginUserDto):Promise<{token:string}>{
-        return this.authService.login(dto)
-    }
+  constructor(private authService: AuthService) {}
+  @Post('register')
+  @HttpCode(HttpStatus.CREATED)
+  register(@Body() dto: CreateUserDto): Promise<{ token: string }> {
+    return this.authService.register(dto);
+  }
+  @Post('login')
+  @HttpCode(HttpStatus.OK)
+  login(@Body() dto: LoginUserDto): Promise<{ token: string }> {
+    return this.authService.login(dto);
+  }
 }
